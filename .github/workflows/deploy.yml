@@ -25,7 +25,26 @@ jobs:
         run: npm run build
 
       - name: Publish artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist/
+    
+release:
+  name: deploy
+  runs-on: ubuntu-latest
+  environment: Developer
+  steps:
+    - name: Dowload artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: dist
+        path: dist/
+    - name: Deploy to Cloudflare
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        command: deploy dist/practice4/index.js --name bold-band-9c54 --compatibility-date 2026-02-26 --compatibility-flags nodejs_compat --assets  dist/client
+        
+        
