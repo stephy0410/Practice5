@@ -33,6 +33,7 @@ jobs:
   release:
     name: deploy
     runs-on: ubuntu-latest
+    needs: deploy
     environment: Developer
     steps:
       - name: Dowload artifact
