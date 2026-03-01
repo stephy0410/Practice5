@@ -75,7 +75,8 @@ jobs:
           subject: "Deployment successful  ${{ github.sha }}"
           to: ${{ secrets.EMAIL_TO }}
           from: GitHub Actions <noreply@yourdomain.com>
-          body:  Deployment to production completed successfully.
+          body: |
+            Deployment to production completed successfully.
             Commit: ${{ github.sha }}
             Author: ${{ github.actor }}
             Branch: ${{ github.ref_name }}
