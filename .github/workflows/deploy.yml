@@ -48,36 +48,36 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy dist/practice4/index.js --name bold-band-9c54 --compatibility-date 2026-02-26 --compatibility-flags nodejs_compat --assets  dist/client
           
-    production:
-      name: deploy
-      runs-on: ubuntu-latest
-      needs: deploy
-      environment: Production
-      steps:
-        - name: Dowload artifact
-          uses: actions/download-artifact@v4
-          with:
-            name: dist
-            path: dist/
-        - name: Deploy to Cloudflare
-          uses: cloudflare/wrangler-action@v3
-          with:
-            apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-            accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-            command: deploy dist/practice4/index.js --name bold-band-9c54 --compatibility-date 2026-02-26 --compatibility-flags nodejs_compat --assets  dist/client
-        - name: Notify deployment via email
-          uses: dawidd6/action-send-mail@v4
-          with:
-            server_address: smtp.gmail.com
-            server_port: 465
-            username: ${{ secrets.EMAIL_USERNAME }}
-            password: ${{ secrets.EMAIL_PASSWORD }}
-            subject: "Deployment successful  ${{ github.sha }}"
-            to: ${{ secrets.EMAIL_TO }}
-            from: GitHub Actions <noreply@yourdomain.com>
-            body:  Deployment to production completed successfully.
-              Commit: ${{ github.sha }}
-              Author: ${{ github.actor }}
-              Branch: ${{ github.ref_name }}
-              Cloudflare URL: https://bold-band-9c54-prod.workers.dev
+  production:
+    name: deploy
+    runs-on: ubuntu-latest
+    needs: release
+    environment: Production
+    steps:
+      - name: Dowload artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy dist/practice4/index.js --name bold-band-9c54-prod --compatibility-date 2026-02-26 --compatibility-flags nodejs_compat --assets  dist/client
+      - name: Notify deployment via email
+        uses: dawidd6/action-send-mail@v4
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "Deployment successful  ${{ github.sha }}"
+          to: ${{ secrets.EMAIL_TO }}
+          from: GitHub Actions <noreply@yourdomain.com>
+          body:  Deployment to production completed successfully.
+            Commit: ${{ github.sha }}
+            Author: ${{ github.actor }}
+            Branch: ${{ github.ref_name }}
+            Cloudflare URL: https://bold-band-9c54-prod.workers.dev
            
